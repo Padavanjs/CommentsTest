@@ -32,4 +32,8 @@ export class CommentModel extends Model<CommentModel> {
 
   @Column({ type: DataType.DATE, allowNull: false })
   createdAt: Date;
+
+  @ForeignKey(() => CommentModel)
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  parentId?: number;
 }

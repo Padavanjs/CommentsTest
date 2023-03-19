@@ -20,6 +20,11 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
+      parentId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: { model: 'comments', key: 'id' },
+      },
     });
   },
 
