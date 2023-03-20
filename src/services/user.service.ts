@@ -1,24 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserModel } from 'src/models/user.model';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(UserModel)
-    private userModel: typeof UserModel,
+    @Inject('USER_REPOSITORY')
+    private userRepository: typeof UserModel,
   ) {}
 
-  async create(email: string, nUsername: string): Promise<UserModel> {
-    const findUser = await this.userModel.findOne({ where: { email } });
-    if (findUser && findUser.username !== nUsername) {
-      await findUser.update({ username: nUsername });
+  async create(email: string, username: string): Promise<UserModel> {
+    const findUser = await this.userRepository.findOne({
+      where: { email: email },
+    });
+    if (findUser !== null) {
+      await findUser.update({ username: username });
       return findUser;
-    } else if (findUser && findUser.username === nUsername) {
-      return findUser;
-    } else {
-      const user = await this.userModel.create({ email, username: nUsername });
-      return user;
     }
+    const user = await this.userRepository.create({ email, username });
+
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<UserModel> {
+    return await this.userRepository.findOne({ where: { email } });
   }
 }

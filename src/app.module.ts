@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UserModel } from './models/user.model';
 import { CommentModel } from './models/comment.model';
@@ -8,6 +8,9 @@ import { FileService } from './services/file.service';
 import { CommentService } from './services/comment.service';
 import { UserService } from './services/user.service';
 import { FileModel } from './models/file.model';
+import * as path from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { modelProviders } from './providers/modelProviders';
 
 @Module({
   imports: [
@@ -20,10 +23,16 @@ import { FileModel } from './models/file.model';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       models: [UserModel, CommentModel, FileModel],
+      define: {
+        timestamps: false,
+      },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'static'),
     }),
   ],
 
   controllers: [CommentController],
-  providers: [FileService, CommentService, UserService],
+  providers: [UserService, CommentService, FileService, ...modelProviders],
 })
 export class AppModule {}
