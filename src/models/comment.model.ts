@@ -5,7 +5,10 @@ import {
   DataType,
   BelongsTo,
   ForeignKey,
+  HasMany,
+  HasOne,
 } from 'sequelize-typescript';
+import { FileModel } from './file.model';
 import { UserModel } from './user.model';
 
 @Table({ tableName: 'comments' })
@@ -36,4 +39,17 @@ export class CommentModel extends Model<CommentModel> {
   @ForeignKey(() => CommentModel)
   @Column({ type: DataType.INTEGER, allowNull: true })
   parentId?: number;
+
+  @HasMany(() => CommentModel)
+  children: CommentModel[];
+
+  @BelongsTo(() => FileModel)
+  file: FileModel;
+
+  @ForeignKey(() => FileModel)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  fileId: number;
 }

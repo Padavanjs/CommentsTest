@@ -25,6 +25,11 @@ module.exports = {
         allowNull: true,
         references: { model: 'comments', key: 'id' },
       },
+      fileId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: { model: 'files', key: 'id' },
+      },
     });
   },
 

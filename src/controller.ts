@@ -33,7 +33,7 @@ export class CommentController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: 'text/plain',
+          fileType: /(jpg|jpeg|png|gif|plain)$/,
         })
         .addMaxSizeValidator({
           maxSize: 100000,
@@ -46,12 +46,13 @@ export class CommentController {
     @Query('parentId') parentId?: number,
   ) {
     const user = await this.userService.create(data.email, data.username);
+    const finishedFile = await this.fileService.create(file);
     const comment = await this.commentService.createComment(
       data.text,
       user.id,
       parentId,
+      finishedFile.id,
     );
-    const finishedFile = await this.fileService.create(file, comment.id);
     const commentForRes = {
       username: user.username,
       email: user.email,
@@ -60,5 +61,14 @@ export class CommentController {
       file: finishedFile.name,
     };
     return commentForRes;
+  }
+  @Get()
+  async getParrentComments() {
+    return await this.commentService.getParentComments();
+  }
+
+  @Get('/:id')
+  async getOneComm(@Param('id') id: number) {
+    return await this.commentService.getOneComment(id);
   }
 }

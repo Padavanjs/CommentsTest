@@ -9,11 +9,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      commentId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'comments', key: 'id' },
-      },
+      type: { type: Sequelize.STRING, allowNull: false },
       name: { type: Sequelize.STRING, allowNull: false },
     });
   },

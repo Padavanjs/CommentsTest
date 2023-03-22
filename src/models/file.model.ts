@@ -5,6 +5,7 @@ import {
   DataType,
   BelongsTo,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
 import { CommentModel } from './comment.model';
 
@@ -17,15 +18,8 @@ export class FileModel extends Model<FileModel> {
   })
   id: number;
 
-  @BelongsTo(() => CommentModel)
-  comment: CommentModel;
-
-  @ForeignKey(() => CommentModel)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  commentId: number;
+  @Column({ type: DataType.STRING, allowNull: false })
+  type: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
   name: string;
