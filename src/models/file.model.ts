@@ -1,13 +1,4 @@
-import {
-  Column,
-  Model,
-  Table,
-  DataType,
-  BelongsTo,
-  ForeignKey,
-  HasMany,
-} from 'sequelize-typescript';
-import { CommentModel } from './comment.model';
+import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table({ tableName: 'files' })
 export class FileModel extends Model<FileModel> {

@@ -13,7 +13,10 @@ export class FileService {
     private fileProcessor: FileProcessor,
   ) {}
 
-  async create(file: Express.Multer.File): Promise<FileModel> {
+  async create(file?: Express.Multer.File): Promise<FileModel> {
+    if (!file) {
+      return;
+    }
     const dirPath = path.resolve(__dirname, '..', '..', 'static');
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
