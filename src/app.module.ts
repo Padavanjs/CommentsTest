@@ -3,15 +3,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UserModel } from './models/user.model';
 import { CommentModel } from './models/comment.model';
-import { CommentController } from './controller';
+import { AppController } from './app.controller';
 import { FileService } from './services/file.service';
 import { CommentService } from './services/comment.service';
 import { UserService } from './services/user.service';
 import { FileModel } from './models/file.model';
-import * as path from 'path';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { FILE_PROCESSORS } from './processors/classes';
 import { FileProcessor } from './processors/file.processor';
+import { CommentEntityTransformer } from './transformers/comment-entity.trsformer';
 
 @Module({
   imports: [
@@ -37,12 +36,13 @@ import { FileProcessor } from './processors/file.processor';
     }),
   ],
 
-  controllers: [CommentController],
+  controllers: [AppController],
   providers: [
     UserService,
     CommentService,
     FileService,
     FileProcessor,
+    CommentEntityTransformer,
     {
       provide: 'USER_REPOSITORY',
       useValue: UserModel,
