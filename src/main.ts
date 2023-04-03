@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.use('/static', express.static(path.resolve(__dirname, '..', 'static')));
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('Comments API')
