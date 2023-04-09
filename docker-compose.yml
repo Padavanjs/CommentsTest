@@ -1,8 +1,38 @@
-version: '3'
+version: '3.1'
 
 services:
-server:
-  build: ./DockerFile
-  restart: always
+  db:
+    image: mysql
+    restart: always
+    volumes:
+      - mysql-cache:/var/lib/mysql
+    ports:
+      - 3303:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin_password
+      MYSQL_DATABASE: db_dzen
 
-  ports: 3000:3000
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: npm run start:dev
+    depends_on:
+      - db
+    volumes:
+      - ./src:/usr/app/server/src
+      - .env.docker:/usr/app/server/.env
+    ports:
+      - 3000:3000
+
+volumes:
+  mysql-cache:

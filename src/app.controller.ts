@@ -7,6 +7,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { Express } from 'express';
 import { CommentService } from './services/comment.service';
@@ -26,11 +27,10 @@ import {
 import { FileUploadDto } from './dto/file-upload.dto';
 import { QueryDto } from './dto/query.dto';
 import { CommentsParentEntity } from './entities/comment-parent.entity';
-import { CommentWithChildrenEntity } from './entities/comment-With-Children.entity';
-import { CommentEntityTransformer } from './transformers/comment-entity.trsformer';
+import { CommentEntityTransformer } from './transformers/comment-entity.transformer';
 import { CommentModel } from './models/comment.model';
 
-@ApiTags('comment')
+@ApiTags('comments')
 @Controller('/comments')
 export class AppController {
   constructor(
@@ -40,7 +40,7 @@ export class AppController {
     private transformer: CommentEntityTransformer,
   ) {}
 
-  @Post('/create')
+  @Post('/')
   @ApiCreatedResponse({
     description: 'The record has been successfully created.',
     type: CommentEntity,
@@ -63,7 +63,6 @@ export class AppController {
       const validFile = validationFile(file);
       uploadedFile = await this.fileService.create(validFile);
     }
-
     const user = await this.userService.create(data.email, data.username);
     const comment = await this.commentService.createComment(
       data.text,
@@ -93,8 +92,10 @@ export class AppController {
   }
 
   @Get('/:id')
-  async getCommentWithFirstChildLevel(@Param('id') id: number) {
-    const comments = await this.commentService.getCommentByIdWithChildren(id);
-    return this.transformer.commentWithChildrenTransform(comments);
+  async getCommentWithFirstChildLevel(@Param('id') id: string) {
+    if (Number.isNaN(+id)) {
+      throw new BadRequestException();
+    }
+    return this.commentService.getCommentByIdWithChildren(+id);
   }
 }

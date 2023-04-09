@@ -14,16 +14,26 @@ export class CommentEntity {
   text: string;
 
   @ApiProperty()
+  parentId?: number;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty({ required: false })
   file?: { type: string; path: string };
 
-  constructor(object: Omit<CommentEntity, 'setFile'>) {
+  @ApiProperty({ required: false })
+  children?: Array<CommentEntity>;
+
+  constructor(object: Omit<CommentEntity, 'setFile' | 'setChildren'>) {
     Object.assign(this, object);
   }
 
   setFile(file: { type: string; path: string }) {
     this.file = file;
+  }
+
+  setChildren(children: Array<CommentEntity>): void {
+    this.children = children;
   }
 }
