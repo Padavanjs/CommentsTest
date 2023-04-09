@@ -1,7 +1,9 @@
-FROM node:19 
-RUN mkdir /usr/app/server 
+FROM node:19
+
 WORKDIR /usr/app/server 
-COPY package*.json .
+
+COPY package*.json ./
+
 RUN npm install 
+
 COPY . .
-CMD ["npm", "start"]

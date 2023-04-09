@@ -10,7 +10,7 @@ import { UserService } from './services/user.service';
 import { FileModel } from './models/file.model';
 import { FILE_PROCESSORS } from './processors/classes';
 import { FileProcessor } from './processors/file.processor';
-import { CommentEntityTransformer } from './transformers/comment-entity.trsformer';
+import { CommentEntityTransformer } from './transformers/comment-entity.transformer';
 
 @Module({
   imports: [

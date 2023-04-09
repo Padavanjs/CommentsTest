@@ -21,7 +21,8 @@ export class FileService {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
     }
-    const filePath = path.resolve(dirPath, createRandomString());
+    const fileName = createRandomString();
+    const filePath = path.resolve(dirPath, fileName);
     const source = await this.fileProcessor.processFile(
       file.buffer,
       file.mimetype,
@@ -29,7 +30,7 @@ export class FileService {
     fs.writeFileSync(filePath, source);
     return this.fileRepository.create({
       type: file.mimetype,
-      name: filePath,
+      name: fileName,
     });
   }
 }
